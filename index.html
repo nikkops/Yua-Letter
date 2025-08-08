@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Yua Letterrr</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle, #B383BF 20%, #e8cdea 60%, white 100%);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    flex-direction: column;
+  }
+
+  .envelope-container {
+    position: relative;
+    width: 320px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .envelope-container:hover {
+    transform: scale(1.05);
+  }
+
+  .envelope-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .letter {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  width: 80%;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  opacity: 0;
+  transform: translateY(0);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+  .letter-image {
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+  border-radius: 4px;
+  }
+
+  .letter.open .letter-image {
+    transform: scale(1.8); 
+  }
+
+  .letter.open {
+    transform: translateY(-10px);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 5;
+  }
+
+  .letter-image {
+    max-width: 100%;
+    max-height: 400px;
+  }
+
+  .music-section {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  .record {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-image: url('Images/record.png'); 
+    background-size: cover;
+    animation: spin 5s linear infinite;
+    margin-right: 20px;
+    z-index: -1;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .song-info {
+    display: flex;
+    flex-direction: column;
+    color: white;
+  }
+
+  .song-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .song-artist {
+    font-size: 14px;
+    margin: 4px 0 0 0;
+  }
+
+  .corner-image {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 4;
+  pointer-events: none;
+  transform: scale(1);
+  }
+
+  .corner-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+/* Rotate only the image inside */
+  .corner-image img.rotated1 {
+    transform: rotate(10deg);
+  }
+
+  .corner-image img.rotated2 {
+    transform: rotate(15deg); 
+  }
+
+  .corner-image img.rotated3 {
+    transform: rotate(-10deg); 
+  }
+
+  .corner-image img.rotated4 {
+    transform: rotate(-2deg); 
+  }
+  
+
+
+  /* Individual positions */
+  .top-left {
+    width: 230px;
+    top: -5vh;
+    left: -49vh;
+  }
+
+  .top-right {
+    width: 150px;
+    top: -15vh;
+    right: -48vh;
+  }
+
+  .bottom-left {
+    width: 150px;
+    bottom: -10vh;
+    left: -45vh;
+  }
+
+  .bottom-right {
+    width: 150px;
+    bottom: -20vh;
+    right: -38vh;
+  }
+
+  
+  .corner-image.open {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="envelope-container" onclick="toggleEnvelope()">
+  <img id="envelopeImage" class="envelope-image" src="Images/envelope-close.png" alt="Envelope">
+
+  <div class="letter" id="letter">
+    <img src="Images/letter.png" alt="Letter" class="letter-image">
+  </div>
+
+  <div class="corner-image top-left" id="photo1">
+    <img src="Images/Rio.png" class="rotated1">
+  </div>
+
+  <div class="corner-image top-right" id="photo2">
+    <img src="Images/Dodge.png" class="rotated2">
+  </div>
+
+  <div class="corner-image bottom-left" id="photo3">
+    <img src="Images/Chiikawa.png" class="rotated3">
+  </div>
+
+  <div class="corner-image bottom-right" id="photo4">
+    <img src="Images/Photobooth.JPG" class="rotated4">
+  </div>
+</div>
+
+
+<div class="music-section">
+  <div class="record"></div>
+  <div class="song-info">
+    <div class="song-title">Inside Out - Requiem</div>
+    <div class="song-artist">Keshi</div>
+  </div>
+</div>
+
+<audio id='music'>
+  <source src="Music/keshi - Inside Out.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  const envelopeImage = document.getElementById('envelopeImage');
+  const letter = document.getElementById('letter');
+  const backgroundMusic = document.getElementById('music');
+  let isOpen = false;
+
+  function toggleEnvelope() {
+    isOpen = !isOpen;
+    if (isOpen) {
+      envelopeImage.src = 'Images/Envelope-Open.png';
+      letter.classList.add('open');
+
+       // Show corner photos
+      document.querySelectorAll('.corner-image').forEach(img => {
+        img.classList.add('open');
+      });
+
+      backgroundMusic.play().catch((error) => {
+        console.warn("Playback failed:", error);
+      });
+    } else {
+      envelopeImage.src = 'Images/Envelope-Close.png';
+      letter.classList.remove('open');
+
+        // Hide corner photos
+      document.querySelectorAll('.corner-image').forEach(img => {
+        img.classList.remove('open');
+      });
+    }
+  }
+</script>
+
+
+</body>
+</html>
